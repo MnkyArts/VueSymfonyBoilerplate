@@ -159,7 +159,7 @@ onMounted(refreshStatus)
     <!-- Quick Links -->
     <div class="grid md:grid-cols-3 gap-4 mb-8">
       <a 
-        href="https://github.com/your-repo/vue-symfony-boilerplate" 
+        href="https://github.com/MnkyArts/VueSymfonyBoilerplate" 
         target="_blank"
         class="flex flex-col items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
       >
@@ -172,18 +172,18 @@ onMounted(refreshStatus)
       </a>
       
       <a 
-        href="/docs" 
+        href="https://vuejs.org/guide/introduction.html" 
         class="flex flex-col items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
       >
         <!-- Book icon -->
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 mb-2 text-slate-700 dark:text-slate-300">
           <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
         </svg>
-        <span class="font-medium">Documentation</span>
+        <span class="font-medium">Vue Documentation</span>
       </a>
       
       <a 
-        href="/api/docs" 
+        href="https://symfony.com/doc/current/index.html" 
         class="flex flex-col items-center p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
       >
         <!-- Terminal icon -->
@@ -191,7 +191,7 @@ onMounted(refreshStatus)
           <polyline points="4 17 10 11 4 5"></polyline>
           <line x1="12" x2="20" y1="19" y2="19"></line>
         </svg>
-        <span class="font-medium">API Docs</span>
+        <span class="font-medium">Symfony Documentation</span>
       </a>
     </div>
 
