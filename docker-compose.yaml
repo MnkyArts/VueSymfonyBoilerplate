@@ -1,0 +1,61 @@
+services:
+  backend:
+    build:
+      context: ./.docker/backend
+      dockerfile: Dockerfile
+    image: symfony-backend:latest
+    container_name: symfony-backend
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html:delegated
+    ports:
+      - "8000:8000"
+    networks:
+      - vue-symfony-network
+
+  frontend:
+    image: oven/bun:latest
+    container_name: vue-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: >
+      sh -c "bun install && bun dev"
+    networks:
+      - vue-symfony-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app_db
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - vue-symfony-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: postgres-db
+      PMA_USER: user
+      PMA_PASSWORD: password
+    ports:
+      - "8080:80"
+    networks:
+      - vue-symfony-network
+
+networks:
+  vue-symfony-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
