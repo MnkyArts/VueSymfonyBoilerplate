@@ -27,8 +27,8 @@ This will build and start the Docker containers for the backend and frontend ser
 
 ### Access the Application
 
-- **Frontend**: [http://localhost:5173](http://localhost:5173)
-- **Backend**: [http://localhost:8000](http://localhost:8000)
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
 
 ## Useful Commands
 
@@ -36,35 +36,44 @@ This will build and start the Docker containers for the backend and frontend ser
 
 - Clear the cache:
   ```bash
-  docker exec -it symfony-backend php bin/console cache:clear
+  docker exec -it vsb-backend php bin/console cache:clear
   ```
 
 - Run database migrations:
   ```bash
-  docker exec -it symfony-backend php bin/console doctrine:migrations:migrate
+  docker exec -it vsb-backend php bin/console doctrine:migrations:migrate
   ```
 
 - Install Composer dependencies:
   ```bash
-  docker exec -it symfony-backend composer install
+  docker exec -it vsb-backend composer install
   ```
 
 ### Vue Frontend
 
 - Install npm dependencies:
   ```bash
-  docker exec -it vue-frontend bun install
+  docker exec -it vsb-frontend bun install
   ```
 
 - Run the development server:
   ```bash
-  docker exec -it vue-frontend bun dev
+  docker exec -it vsb-frontend bun dev
   ```
 
 - Build the production assets:
   ```bash
-  docker exec -it vue-frontend bun build
+  docker exec -it vsb-frontend bun build
   ```
+
+## Reverse Proxy Setup
+
+The project includes an Nginx reverse proxy to serve both the Vue frontend and Symfony backend on a single domain.
+
+### Access the Application
+
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
 
 ## Troubleshooting
 

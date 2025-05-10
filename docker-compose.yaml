@@ -3,19 +3,19 @@ services:
     build:
       context: ./.docker/backend
       dockerfile: Dockerfile
-    image: symfony-backend:latest
-    container_name: symfony-backend
+    image: vsb-backend:latest
+    container_name: vsb-backend
     working_dir: /var/www/html
     volumes:
       - ./backend:/var/www/html:delegated
     ports:
       - "8000:8000"
     networks:
-      - vue-symfony-network
+      - vsb-network
 
   frontend:
     image: oven/bun:latest
-    container_name: vue-frontend
+    container_name: vsb-frontend
     working_dir: /app
     volumes:
       - ./frontend:/app
@@ -24,11 +24,11 @@ services:
     command: >
       sh -c "bun install && bun dev"
     networks:
-      - vue-symfony-network
+      - vsb-network
 
   postgres:
     image: postgres:latest
-    container_name: postgres-db
+    container_name: vsb-postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -39,22 +39,35 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - vue-symfony-network
+      - vsb-network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
+    container_name: vsb-phpmyadmin
     environment:
-      PMA_HOST: postgres-db
+      PMA_HOST: vsb-postgres
       PMA_USER: user
       PMA_PASSWORD: password
     ports:
       - "8080:80"
     networks:
-      - vue-symfony-network
+      - vsb-network
+
+  proxy:
+    image: nginx:latest
+    container_name: vsb-nginx-proxy
+    ports:
+      - "3000:80"
+    volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - vsb-network
 
 networks:
-  vue-symfony-network:
+  vsb-network:
     driver: bridge
 
 volumes:
