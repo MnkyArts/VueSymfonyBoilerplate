@@ -1,85 +1,77 @@
-<script setup lang="ts">
+<script setup>
+import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+
+const apiStatus = ref('checking...')
+const apiStatusClass = ref('text-yellow-500')
+
+// Check connection to Symfony backend
+onMounted(async () => {
+  try {
+    const response = await fetch('/api/status')
+    if (response.ok) {
+      apiStatus.value = 'connected'
+      apiStatusClass.value = 'text-green-500'
+    } else {
+      apiStatus.value = 'error'
+      apiStatusClass.value = 'text-red-500'
+    }
+  } catch (error) {
+    apiStatus.value = 'disconnected'
+    apiStatusClass.value = 'text-red-500'
+  }
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100">
+    <header class="border-b border-slate-200 dark:border-slate-800">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+          <!-- Logo -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
+              <!-- Code icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                <polyline points="16 18 22 12 16 6"></polyline>
+                <polyline points="8 6 2 12 8 18"></polyline>
+              </svg>
+            </div>
+            <span class="text-xl font-bold">VSB</span>
+          </div>
+          
+          <!-- API Status -->
+          <div class="flex items-center gap-2 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-full shadow-sm border border-slate-200 dark:border-slate-700">
+            <!-- Server icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-500">
+              <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+              <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+              <line x1="6" x2="6" y1="6" y2="6"></line>
+              <line x1="6" x2="6" y1="18" y2="18"></line>
+            </svg>
+            <span class="text-sm text-slate-600 dark:text-slate-400">API:</span>
+            <span class="text-sm font-medium" :class="apiStatusClass">{{ apiStatus }}</span>
+          </div>
+          
+          <!-- Navigation -->
+          <nav class="flex gap-4">
+            <RouterLink to="/" class="px-3 py-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+              Home
+            </RouterLink>
+            <RouterLink to="/about" class="px-3 py-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+              About
+            </RouterLink>
+            <RouterLink to="/demo" class="px-3 py-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+              Demo
+            </RouterLink>
+          </nav>
+        </div>
+      </div>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <main class="container mx-auto px-4 py-8">
+      <!-- Router View -->
+      <RouterView />
+    </main>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
