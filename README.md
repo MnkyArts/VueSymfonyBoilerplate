@@ -9,7 +9,7 @@
 ![Vue Router](https://img.shields.io/badge/Vue%20Router-4.5-orange?logo=vue.js&logoColor=white)
 ![Doctrine](https://img.shields.io/badge/Doctrine-ORM-blue?logo=php&logoColor=white)
 
-This project is a boilerplate for a Vue.js frontend and Symfony backend application. It provides a pre-configured setup for developing modern web applications with a Vue.js frontend and a Symfony backend.
+VSB (Vue Symfony Boilerplate) is a ready-to-use boilerplate that provides a clean, pre-configured setup for developing modern web applications using a standalone Vue.js frontend and a standalone Symfony 7 API backend. Unlike traditional integrations, this boilerplate does not use the Symfony UX-Vue integration within Symfony. Instead, both frameworks operate independently, communicating via a robust API-driven architecture. This separation ensures greater flexibility, clearer separation of concerns, and easier scalability for modern full-stack development workflows.
 
 ## Project Structure
 
