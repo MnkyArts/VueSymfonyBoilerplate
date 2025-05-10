@@ -1,5 +1,14 @@
 # VueSymfonyBoilerplate
 
+![Vue.js](https://img.shields.io/badge/Vue.js-3.5-green?logo=vue.js&logoColor=white)
+![Symfony](https://img.shields.io/badge/Symfony-7.0-black?logo=symfony&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.0-blue?logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.0-38B2AC?logo=tailwindcss&logoColor=white)
+![Bun](https://img.shields.io/badge/Bun-1.1-pink?logo=bun&logoColor=white)
+![Pinia](https://img.shields.io/badge/Pinia-3.0-yellow?logo=vue.js&logoColor=white)
+![Vue Router](https://img.shields.io/badge/Vue%20Router-4.5-orange?logo=vue.js&logoColor=white)
+![Doctrine](https://img.shields.io/badge/Doctrine-ORM-blue?logo=php&logoColor=white)
+
 This project is a boilerplate for a Vue.js frontend and Symfony backend application. It provides a pre-configured setup for developing modern web applications with a Vue.js frontend and a Symfony backend.
 
 ## Project Structure
@@ -7,6 +16,20 @@ This project is a boilerplate for a Vue.js frontend and Symfony backend applicat
 - **backend/**: Contains the Symfony backend application.
 - **frontend/**: Contains the Vue.js frontend application.
 - **docker-compose.yaml**: Docker configuration for running the project.
+- **.docker/**: Contains Docker-related configurations, including backend and Nginx setups.
+
+## Tech Stack
+
+This project uses the following technologies:
+
+- **bun**: A fast JavaScript runtime and package manager.
+- **Vue 3**: A progressive JavaScript framework for building user interfaces.
+- **TypeScript**: A strongly typed programming language that builds on JavaScript.
+- **Pinia**: A state management library for Vue applications.
+- **Vue Router**: The official router for Vue.js.
+- **TailwindCSS**: A utility-first CSS framework for rapid UI development.
+- **Symfony 7**: A PHP framework for web applications and APIs.
+- **Doctrine ORM**: An object-relational mapper for PHP.
 
 ## Prerequisites
 
