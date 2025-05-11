@@ -20,4 +20,3 @@ export type Success<T> = {
       return { response: null, error: error as E };
     }
   }
-  

@@ -10,6 +10,10 @@ RUN apt-get update && apt-get install -y \
     wget \
     && docker-php-ext-install intl zip
 
+# Install PostgreSQL driver
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-install pdo_pgsql
+
 # Install Symfony CLI
 RUN wget https://get.symfony.com/cli/installer -O - | bash \
     && mv /root/.symfony*/bin/symfony /usr/local/bin/symfony

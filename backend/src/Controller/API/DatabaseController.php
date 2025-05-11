@@ -19,8 +19,7 @@ class DatabaseController extends AbstractController
             return new JsonResponse([
                 'status' => 'connected',
                 'database' => $connection->getDatabase(),
-                'driver' => $connection->getDriver()->getName(),
-                'server_version' => $connection->getServerVersion(),
+                'driver' => $connection->getDriver()->getDatabasePlatform()->getName(),
             ]);
         } catch (\Exception $e) {
             return new JsonResponse([
