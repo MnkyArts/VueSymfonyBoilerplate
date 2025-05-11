@@ -22,7 +22,6 @@ const users = ref<{ id: number; name: string; email: string }[]>([])
 const loading = ref(false)
 const fetchError = ref<Error | null>(null)
 
-// Mock login function
 const login = () => {
   // Simple validation
   if (!loginForm.value.email || !loginForm.value.password) {
@@ -38,7 +37,6 @@ const login = () => {
   loginForm.value = { email: '', password: '' }
 }
 
-// Mock register function
 const register = () => {
   if (!registerForm.value || !registerForm.value.email || !registerForm.value.password) {
     authError.value = 'Please fill in all fields';
@@ -54,7 +52,6 @@ const register = () => {
   registerForm.value = { email: '', password: '' };
 };
 
-// Mock logout function
 const logout = () => {
   userStore.logout();
   authError.value = '';
@@ -233,10 +230,6 @@ const setActiveTab = (tab: string) => {
             </div>
           </form>
         </div>
-        
-        <div class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-          <p>For demo purposes, any name, email, and password will work</p>
-        </div>
       </div>
       
       <!-- Protected Content -->
@@ -324,7 +317,7 @@ const setActiveTab = (tab: string) => {
           Click the "Login / Register" button to view protected content
         </p>
         <p class="text-sm text-slate-500 dark:text-slate-500">
-          This is a demonstration of authentication - no real authentication is performed
+          You will need to have the Database migrated for this Authentication to work.
         </p>
       </div>
     </div>
