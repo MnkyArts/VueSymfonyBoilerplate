@@ -41,15 +41,11 @@ services:
     networks:
       - vsb-network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: vsb-phpmyadmin
-    environment:
-      PMA_HOST: vsb-postgres
-      PMA_USER: user
-      PMA_PASSWORD: password
+  adminer:
+    image: adminer:latest
+    container_name: vsb-adminer
     ports:
-      - "8080:80"
+      - "8080:8080"
     networks:
       - vsb-network
 

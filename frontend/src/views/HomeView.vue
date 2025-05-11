@@ -1,5 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import api from '@/api'
+import { tryCatch } from '@/lib/tryCatch';
 
 const steps = ref([
   { 
@@ -41,37 +43,31 @@ const welcomeMessageClass = computed(() => {
     : 'text-amber-600 dark:text-amber-400'
 })
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
-
 // Check Symfony backend status
 const checkBackendStatus = async () => {
-  try {
-    const response = await fetch(`${apiBaseUrl}/status`)
-    if (response.ok) {
-      // Update the Symfony Backend step
-      steps.value[1].completed = true
-      steps.value[1].description = 'Symfony API is running successfully!'
-    }
-  } catch (error) {
-    console.error('Backend check error:', error)
-    steps.value[1].description = 'Could not connect to Symfony API. Is it running?'
+  const { response, error } = await tryCatch(api.get('/status'));
+
+  if (response) {
+    steps.value[1].completed = true;
+    steps.value[1].description = 'Symfony API is running successfully!';
+  } else {
+    console.error('Backend check error:', error);
+    steps.value[1].description = 'Could not connect to Symfony API. Is it running?';
   }
-}
+};
 
 // Check database connection
 const checkDatabaseStatus = async () => {
-  try {
-    const response = await fetch(`${apiBaseUrl}/database/status`)
-    if (response.ok) {
-      // Update the Database Connection step
-      steps.value[2].completed = true
-      steps.value[2].description = 'Database connection established successfully!'
-    }
-  } catch (error) {
-    console.error('Database check error:', error)
-    steps.value[2].description = 'Could not connect to database. Check your .env configuration.'
+  const { response, error } = await tryCatch(api.get('/database/status'));
+
+  if (response) {
+    steps.value[2].completed = true;
+    steps.value[2].description = 'Database connection established successfully!';
+  } else {
+    console.error('Database check error:', error);
+    steps.value[2].description = 'Could not connect to database. Check your .env configuration.';
   }
-}
+};
 
 // Function to refresh all status checks
 const refreshStatus = async () => {

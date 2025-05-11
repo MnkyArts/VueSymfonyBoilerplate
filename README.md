@@ -30,6 +30,7 @@ This project uses the following technologies:
 - **TailwindCSS**: A utility-first CSS framework for rapid UI development.
 - **Symfony 7**: A PHP framework for web applications and APIs.
 - **Doctrine ORM**: An object-relational mapper for PHP.
+- **PostgreSQL**: A reliable, open-source database used for Symfony backend data management.
 
 ## Prerequisites
 
@@ -48,10 +49,15 @@ docker-compose up --build
 
 This will build and start the Docker containers for the backend and frontend services.
 
+## Reverse Proxy Setup
+
+The project includes an Nginx reverse proxy to serve both the Vue frontend and Symfony backend on a single domain.
+
 ### Access the Application
 
 - **Frontend**: [http://localhost:3000](http://localhost:3000)
 - **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
+- **Adminer**: [http://localhost:3000/adminer](http://localhost:3000/adminer)
 
 ## Useful Commands
 
@@ -88,25 +94,6 @@ This will build and start the Docker containers for the backend and frontend ser
   ```bash
   docker exec -it vsb-frontend bun build
   ```
-
-## Reverse Proxy Setup
-
-The project includes an Nginx reverse proxy to serve both the Vue frontend and Symfony backend on a single domain.
-
-### Access the Application
-
-- **Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
-
-## Troubleshooting
-
-### Symfony Backend
-
-- If the backend is not accessible, ensure that the `--allow-all-ip` flag is set in the Symfony serve command.
-
-### Vue Frontend
-
-- If the frontend is not accessible, ensure that the `--host` flag is set in the `vite` dev script.
 
 ## License
 

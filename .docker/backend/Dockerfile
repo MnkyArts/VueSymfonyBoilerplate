@@ -28,6 +28,9 @@ COPY . /var/www/html
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
 
+# Check if the vendor directory exists, and if not, run composer install
+RUN if [ ! -d "/var/www/html/vendor" ]; then composer install; fi
+
 # Expose port 8000
 EXPOSE 8000
 

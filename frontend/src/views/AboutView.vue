@@ -1,7 +1,3 @@
-<script setup>
-// No imports needed now that we're using inline SVGs
-</script>
-
 <template>
   <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-bold mb-6">About VSB</h1>

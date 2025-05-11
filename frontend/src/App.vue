@@ -1,26 +1,24 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+import api from '@/api'
+import { tryCatch } from '@/lib/tryCatch';
 
 const apiStatus = ref('checking...')
 const apiStatusClass = ref('text-yellow-500')
 
 // Check connection to Symfony backend
 onMounted(async () => {
-  try {
-    const response = await fetch('/api/status')
-    if (response.ok) {
-      apiStatus.value = 'connected'
-      apiStatusClass.value = 'text-green-500'
-    } else {
-      apiStatus.value = 'error'
-      apiStatusClass.value = 'text-red-500'
-    }
-  } catch (error) {
-    apiStatus.value = 'disconnected'
-    apiStatusClass.value = 'text-red-500'
+  const { response, error } = await tryCatch(api.get('/status'));
+
+  if (response) {
+    apiStatus.value = 'connected';
+    apiStatusClass.value = 'text-green-500';
+  } else {
+    apiStatus.value = 'disconnected: ' + error.message;
+    apiStatusClass.value = 'text-red-500';
   }
-})
+});
 </script>
 
 <template>
