@@ -34,10 +34,10 @@ security:
             entry_point: jwt
             logout:
                 path: /api/token/invalidate
-                invalidate_session: false
                 delete_cookies:
                     - jwt_hp
                     - jwt_s
+                    - refresh_token
 
     access_control:
         # Access Control for the Template, can be removed if not used anymore

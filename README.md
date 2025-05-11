@@ -59,6 +59,24 @@ The project includes an Nginx reverse proxy to serve both the Vue frontend and S
 - **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
 - **Adminer**: [http://localhost:3000/adminer](http://localhost:3000/adminer)
 
+## Authentication Setup
+
+The project includes authentication using the **Lexik JWT Authentication Bundle** and **Gesdinet JWT Refresh Token Bundle**. To enable authentication, follow these steps:
+
+1. **Generate JWT Keys**:
+   Run the following command to generate the required private and public keys for JWT:
+   ```bash
+   docker exec -it vsb-backend php bin/console lexik:jwt:generate-keypair
+   ```
+
+2. **Run Database Migrations**:
+   Ensure the database is up-to-date by running the migrations:
+   ```bash
+   docker exec -it vsb-backend php bin/console doctrine:migrations:migrate
+   ```
+
+Once these steps are completed, you can start using the authentication and refresh token features. You can find a Demo of it under /demo
+
 ## Useful Commands
 
 ### Symfony Backend
