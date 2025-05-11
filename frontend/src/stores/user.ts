@@ -14,6 +14,12 @@ interface AuthState {
   isRefreshing: boolean
 }
 
+interface RegisterData {
+    email: string
+    password: string
+    // Add other registration fields based on your API requirements
+}
+
 export const useUserStore = defineStore('user', {
   state: (): AuthState => ({
     user: null,
@@ -24,12 +30,29 @@ export const useUserStore = defineStore('user', {
   actions: {
     async login(credentials: { email: string; password: string }) {
       try {
-        await api.post('/login', credentials)
+        await api.post('/auth/login', credentials)
         return this.checkAuth()
       } catch (error) {
         this.clearUser()
         throw error
       }
+    },
+
+    async register(registerData: RegisterData) {
+        try {
+          await api.post('/auth/register', registerData)
+          
+          // Optional: Automatically log in after registration
+          // return this.login({
+          //   email: registerData.email,
+          //   password: registerData.password
+          // })
+          
+          return true
+        } catch (error) {
+          this.clearUser()
+          throw error
+        }
     },
 
     async checkAuth() {
@@ -61,7 +84,7 @@ export const useUserStore = defineStore('user', {
 
     async logout() {
       try {
-        await api.post('/logout')
+        await api.post('/auth/logout')
       } finally {
         this.clearUser()
       }

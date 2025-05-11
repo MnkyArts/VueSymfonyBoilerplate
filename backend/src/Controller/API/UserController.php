@@ -5,6 +5,8 @@ namespace App\Controller\API;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use App\Entity\User;
 
 class UserController extends AbstractController
 {
@@ -44,5 +46,19 @@ class UserController extends AbstractController
         ];
 
         return new JsonResponse($user);
+    }
+
+    #[Route('/api/user', name: 'api_user', methods: ['GET'])]
+    public function getCurrentUser(#[CurrentUser] ?User $user): JsonResponse
+    {
+        if (!$user) {
+            return $this->json(['message' => 'Not authenticated'], 401);
+        }
+
+        return $this->json([
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ]);
     }
 }
