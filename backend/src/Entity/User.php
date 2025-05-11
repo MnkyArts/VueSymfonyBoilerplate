@@ -1,6 +1,5 @@
 <?php
 
-// src/Entity/User.php
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -9,6 +8,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'users')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]

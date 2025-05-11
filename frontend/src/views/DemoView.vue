@@ -2,20 +2,20 @@
 import { ref, onMounted } from 'vue'
 import api from '@/api'
 import { tryCatch } from '@/lib/tryCatch';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore()
 
 // Mock authentication state
-const isAuthenticated = ref(false)
 const showLoginForm = ref(false)
 const loginForm = ref({
   email: '',
   password: ''
 })
 const registerForm = ref({
-  name: '',
   email: '',
   password: ''
 })
-const currentUser = ref<{ name: string; email: string } | null>(null)
 const authError = ref('')
 
 const users = ref<{ id: number; name: string; email: string }[]>([])
@@ -29,14 +29,9 @@ const login = () => {
     authError.value = 'Please fill in all fields'
     return
   }
-  
-  // Mock authentication - in a real app, this would call an API
+
+  userStore.login(loginForm.value);
   authError.value = ''
-  isAuthenticated.value = true
-  currentUser.value = {
-    name: loginForm.value.email.split('@')[0],
-    email: loginForm.value.email
-  }
   showLoginForm.value = false
   
   // Clear form
@@ -45,29 +40,25 @@ const login = () => {
 
 // Mock register function
 const register = () => {
-  // Simple validation
-  if (!registerForm.value.name || !registerForm.value.email || !registerForm.value.password) {
-    authError.value = 'Please fill in all fields'
-    return
+  if (!registerForm.value || !registerForm.value.email || !registerForm.value.password) {
+    authError.value = 'Please fill in all fields';
+    return;
   }
-  
-  // Mock registration - in a real app, this would call an API
-  authError.value = ''
-  isAuthenticated.value = true
-  currentUser.value = {
-    name: registerForm.value.name,
-    email: registerForm.value.email
-  }
-  showLoginForm.value = false
-  
+
+  userStore.register(registerForm.value);
+
+  authError.value = '';
+  showLoginForm.value = false;
+
   // Clear form
-  registerForm.value = { name: '', email: '', password: '' }
-}
+  registerForm.value = { email: '', password: '' };
+};
 
 // Mock logout function
 const logout = () => {
-  isAuthenticated.value = false
-  currentUser.value = null
+  userStore.logout();
+  authError.value = '';
+  showLoginForm.value = false;
 }
 
 // Toggle login/register form
@@ -94,6 +85,14 @@ const fetchUsers = async () => {
 };
 
 onMounted(fetchUsers)
+
+// Add tab functionality to toggle between Login and Register forms
+const activeTab = ref('login'); // Default to login tab
+
+const setActiveTab = (tab: string) => {
+  activeTab.value = tab;
+  authError.value = ''; // Clear any existing error messages
+};
 </script>
 
 <template>
@@ -110,7 +109,7 @@ onMounted(fetchUsers)
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-bold">Authentication Demo</h2>
         
-        <div v-if="!isAuthenticated">
+        <div v-if="!userStore.isAuthenticated" class="flex items-center gap-3">
           <button 
             @click="toggleAuthForm" 
             class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md transition-colors"
@@ -128,7 +127,7 @@ onMounted(fetchUsers)
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
             </div>
-            <span class="font-medium">{{ currentUser?.name }}</span>
+            <span class="font-medium">{{ userStore.user?.email }}</span>
           </div>
           
           <button 
@@ -141,16 +140,20 @@ onMounted(fetchUsers)
       </div>
       
       <!-- Login/Register Form -->
-      <div v-if="showLoginForm && !isAuthenticated" class="mb-6">
+      <div v-if="showLoginForm && !userStore.isAuthenticated" class="mb-6">
         <div class="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4">
           <!-- Tabs -->
           <div class="flex border-b border-slate-200 dark:border-slate-600 mb-4">
             <button 
-              class="px-4 py-2 font-medium border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400"
+              @click="setActiveTab('login')"
+              :class="{'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400': activeTab === 'login'}"
+              class="px-4 py-2 font-medium"
             >
               Login
             </button>
             <button 
+              @click="setActiveTab('register')"
+              :class="{'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400': activeTab === 'register'}"
               class="px-4 py-2 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
             >
               Register
@@ -163,7 +166,7 @@ onMounted(fetchUsers)
           </div>
           
           <!-- Login Form -->
-          <form @submit.prevent="login" class="space-y-4">
+          <form v-if="activeTab === 'login'" @submit.prevent="login" class="space-y-4">
             <div>
               <label for="email" class="block text-sm font-medium mb-1">Email</label>
               <input
@@ -195,15 +198,49 @@ onMounted(fetchUsers)
               </button>
             </div>
           </form>
+
+          <!-- Register Form -->
+          <form v-if="activeTab === 'register'" @submit.prevent="register" class="space-y-4">
+            <div>
+              <label for="email" class="block text-sm font-medium mb-1">Email</label>
+              <input
+                id="email"
+                v-model="registerForm.email"
+                type="email"
+                class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div>
+              <label for="password" class="block text-sm font-medium mb-1">Password</label>
+              <input
+                id="password"
+                v-model="registerForm.password"
+                type="password"
+                class="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-600"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                type="submit"
+                class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
+              >
+                Register
+              </button>
+            </div>
+          </form>
         </div>
         
         <div class="mt-3 text-center text-sm text-slate-500 dark:text-slate-400">
-          <p>For demo purposes, any email and password will work</p>
+          <p>For demo purposes, any name, email, and password will work</p>
         </div>
       </div>
       
       <!-- Protected Content -->
-      <div v-if="isAuthenticated" class="space-y-4">
+      <div v-if="userStore.isAuthenticated" class="space-y-4">
         <div class="p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg">
           <div class="flex items-start gap-3">
             <!-- Check icon -->
@@ -282,7 +319,7 @@ onMounted(fetchUsers)
       </div>
       
       <!-- Not authenticated message -->
-      <div v-if="!isAuthenticated && !showLoginForm" class="p-4 bg-slate-100 dark:bg-slate-700 rounded-lg text-center">
+      <div v-if="!userStore.isAuthenticated && !showLoginForm" class="p-4 bg-slate-100 dark:bg-slate-700 rounded-lg text-center">
         <p class="text-slate-600 dark:text-slate-400 mb-2">
           Click the "Login / Register" button to view protected content
         </p>
@@ -344,9 +381,9 @@ onMounted(fetchUsers)
               <td class="px-4 py-3 text-sm">
                 <button 
                   class="text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400"
-                  :class="{ 'opacity-50 cursor-not-allowed': !isAuthenticated }"
-                  :disabled="!isAuthenticated"
-                  :title="!isAuthenticated ? 'Login to view details' : 'View details'"
+                  :class="{ 'opacity-50 cursor-not-allowed': !userStore.isAuthenticated }"
+                  :disabled="!userStore.isAuthenticated"
+                  :title="!userStore.isAuthenticated ? 'Login to view details' : 'View details'"
                 >
                   <!-- View icon -->
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
@@ -361,7 +398,7 @@ onMounted(fetchUsers)
       </div>
       
       <!-- Note about authentication -->
-      <div v-if="!isAuthenticated" class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+      <div v-if="!userStore.isAuthenticated" class="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
         <div class="flex items-start gap-3">
           <!-- Info icon -->
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5">

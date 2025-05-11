@@ -4,11 +4,17 @@ import { RouterLink, RouterView } from 'vue-router'
 import api from '@/api'
 import { tryCatch } from '@/lib/tryCatch';
 
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
+
 const apiStatus = ref('checking...')
 const apiStatusClass = ref('text-yellow-500')
 
 // Check connection to Symfony backend
 onMounted(async () => {
+  userStore.checkAuth();
+
   const { response, error } = await tryCatch(api.get('/status'));
 
   if (response) {

@@ -5,7 +5,6 @@ namespace App\Controller\API\Auth;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,18 +15,9 @@ use App\Entity\User;
 class AuthController extends AbstractController
 {
     #[Route('/login', name: 'api_auth_login', methods: ['POST'])]
-    public function login(#[CurrentUser] ?User $user): JsonResponse
+    public function login(): void
     {
-        if (null === $user) {
-            return $this->json([
-                'message' => 'Invalid credentials',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-
-        return $this->json([
-            'user' => $user->getUserIdentifier(),
-            'roles' => $user->getRoles(),
-        ]);
+        // Route is handled by LexikJWTAuthenticationBundle
     }
 
     #[Route('/register', name: 'api_register', methods: ['POST'])]
@@ -67,9 +57,16 @@ class AuthController extends AbstractController
         ], 201);
     }
 
-    #[Route('/logout', name: 'api_logout', methods: ['POST'])]
-    public function logout(): JsonResponse
+    #[Route('/logout', name: 'api_logout', methods: ['POST', 'GET'])]
+    public function logout(Request $request): JsonResponse
     {
-        return $this->json(['message' => 'Logged out successfully']);
+        $response = $this->json(['message' => 'Logged out successfully']);
+
+        // Clear cookies
+        $response->headers->clearCookie('jwt_hp');
+        $response->headers->clearCookie('jwt_s');
+        $response->headers->clearCookie('refresh_token');
+
+        return $response;
     }
 }

@@ -11,10 +11,10 @@ security:
 
     firewalls:
         login:
-            pattern: ^/api/login_check
+            pattern: ^/api/auth/login
             stateless: true
             json_login:
-                check_path: /api/login_check
+                check_path: /api/auth/login
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -45,8 +45,9 @@ security:
         - { path: ^/api/database/status, roles: PUBLIC_ACCESS }
         - { path: ^/api/users, roles: PUBLIC_ACCESS }
 
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/token/refresh, roles: PUBLIC_ACCESS }
         - { path: ^/api/token/invalidate, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }
