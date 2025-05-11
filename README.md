@@ -1,4 +1,4 @@
-# VueSymfonyBoilerplate
+# VueSymfonyBoilerplate (VSB)
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.5-green?logo=vue.js&logoColor=white)
 ![Symfony](https://img.shields.io/badge/Symfony-7.0-black?logo=symfony&logoColor=white)
@@ -9,110 +9,123 @@
 ![Vue Router](https://img.shields.io/badge/Vue%20Router-4.5-orange?logo=vue.js&logoColor=white)
 ![Doctrine](https://img.shields.io/badge/Doctrine-ORM-blue?logo=php&logoColor=white)
 
-VSB (Vue Symfony Boilerplate) is a ready-to-use boilerplate that provides a clean, pre-configured setup for developing modern web applications using a standalone Vue.js frontend and a standalone Symfony 7 API backend. Unlike traditional integrations, this boilerplate does not use the Symfony UX-Vue integration within Symfony. Instead, both frameworks operate independently, communicating via a robust API-driven architecture. This separation ensures greater flexibility, clearer separation of concerns, and easier scalability for modern full-stack development workflows.
+**VueSymfonyBoilerplate (VSB)** is a production-ready foundation for building modern web applications with a strict separation between frontend and backend. Unlike traditional Symfony-UI integrations, this boilerplate features:
 
-## Project Structure
+- 🧩 **Fully decoupled architecture**: Vue 3 frontend and Symfony 7 API operate as independent services
+- 🔄 **API-first design**: Clean RESTful communication between layers
+- 🚀 **Modern development experience**: Bun runtime + TypeScript + Hot Module Replacement
+- 🔒 **Enterprise-ready security**: Pre-configured JWT authentication with refresh tokens
+- 📦 **Zero-config Docker setup**: Includes PostgreSQL, Nginx reverse proxy, and Adminer
 
-- **backend/**: Contains the Symfony backend application.
-- **frontend/**: Contains the Vue.js frontend application.
-- **docker-compose.yaml**: Docker configuration for running the project.
-- **.docker/**: Contains Docker-related configurations, including backend and Nginx setups.
+Perfect for teams implementing microservices architecture or developers wanting complete control over frontend/backend boundaries.
 
-## Tech Stack
+---
 
-This project uses the following technologies:
+## 🚀 Key Features
 
-- **bun**: A fast JavaScript runtime and package manager.
-- **Vue 3**: A progressive JavaScript framework for building user interfaces.
-- **TypeScript**: A strongly typed programming language that builds on JavaScript.
-- **Pinia**: A state management library for Vue applications.
-- **Vue Router**: The official router for Vue.js.
-- **TailwindCSS**: A utility-first CSS framework for rapid UI development.
-- **Symfony 7**: A PHP framework for web applications and APIs.
-- **Doctrine ORM**: An object-relational mapper for PHP.
-- **PostgreSQL**: A reliable, open-source database used for Symfony backend data management.
+- **Decoupled Architecture**: Independent frontend/backend services communicating via API
+- Modern Frontend Stack: Vue 3 + TypeScript + Pinia + TailwindCSS
+- Robust Backend: Symfony 7 + Doctrine ORM + PostgreSQL
+- Production-Ready Setup: Dockerized environment with Nginx reverse proxy
+- JWT Authentication: Pre-configured with refresh token support
+- Bun Runtime: Faster JavaScript tooling
 
-## Prerequisites
+## 📂 Project Structure
 
-- Docker and Docker Compose installed on your system.
-- Symfony CLI installed (optional for local development).
+```text
+VueSymfonyBoilerplate/
+├── backend/            # Symfony 7 API application
+├── frontend/           # Vue 3 + TypeScript frontend
+├── .docker/            # Docker configurations
+│   ├── backend/
+│   └── nginx/
+├── docker-compose.yaml # Main Docker configuration
+```
 
-## Getting Started
+## 🛠️ Tech Stack
 
-### Start the Project
+| Component       | Technology                          |
+|-----------------|-------------------------------------|
+| **Frontend**    | Vue 3, TypeScript, Axios, Pinia, Vue-Router, Tailwind  |
+| **Backend**     | Symfony 7, Doctrine ORM, PHP 8.3    |
+| **Database**    | PostgreSQL                          |
+| **Runtime**     | Bun (Frontend), PHP-FPM (Backend)   |
+| **Auth**        | JWT + Refresh Tokens                |
+| **Infra**       | Docker, Nginx Reverse Proxy         |
 
-To start the project, run the following command:
+## ⚙️ Prerequisites
+
+- Docker & Docker Compose
+- (Optional) Symfony CLI for local development
+
+## 🏁 Getting Started
+
+### 1. Start the Application
 
 ```bash
 docker-compose up --build
 ```
 
-This will build and start the Docker containers for the backend and frontend services.
+### 2. Access Services
 
-## Reverse Proxy Setup
+| Service          | URL                              |
+|------------------|----------------------------------|
+| Frontend         | http://localhost:3000           |
+| Backend API      | http://localhost:3000/api       |
+| Adminer (DB GUI) | http://localhost:3000/adminer   |
 
-The project includes an Nginx reverse proxy to serve both the Vue frontend and Symfony backend on a single domain.
+## 🔐 Authentication Setup
 
-### Access the Application
+### 1. Generate JWT Keys
 
-- **Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Backend API**: [http://localhost:3000/api](http://localhost:3000/api)
-- **Adminer**: [http://localhost:3000/adminer](http://localhost:3000/adminer)
+```bash
+docker exec -it vsb-backend php bin/console lexik:jwt:generate-keypair
+```
 
-## Authentication Setup
+### 2. Run Database Migrations
 
-The project includes authentication using the **Lexik JWT Authentication Bundle** and **Gesdinet JWT Refresh Token Bundle**. To enable authentication, follow these steps:
+```bash
+docker exec -it vsb-backend php bin/console doctrine:migrations:migrate
+```
 
-1. **Generate JWT Keys**:
-   Run the following command to generate the required private and public keys for JWT:
-   ```bash
-   docker exec -it vsb-backend php bin/console lexik:jwt:generate-keypair
-   ```
+> **Demo Available**: Authentication demo at `/demo` route
 
-2. **Run Database Migrations**:
-   Ensure the database is up-to-date by running the migrations:
-   ```bash
-   docker exec -it vsb-backend php bin/console doctrine:migrations:migrate
-   ```
+## 🐳 Common Docker Commands
 
-Once these steps are completed, you can start using the authentication and refresh token features. You can find a Demo of it under /demo
+### Backend Operations
 
-## Useful Commands
+```bash
+# Clear Symfony cache
+docker exec -it vsb-backend php bin/console cache:clear
 
-### Symfony Backend
+# Install dependencies
+docker exec -it vsb-backend composer install
 
-- Clear the cache:
-  ```bash
-  docker exec -it vsb-backend php bin/console cache:clear
-  ```
+# Run new migration
+docker exec -it vsb-backend php bin/console make:migration
+```
 
-- Run database migrations:
-  ```bash
-  docker exec -it vsb-backend php bin/console doctrine:migrations:migrate
-  ```
+### Frontend Operations
 
-- Install Composer dependencies:
-  ```bash
-  docker exec -it vsb-backend composer install
-  ```
+```bash
+# Install packages
+docker exec -it vsb-frontend bun install
 
-### Vue Frontend
+# Start dev server
+docker exec -it vsb-frontend bun dev
 
-- Install npm dependencies:
-  ```bash
-  docker exec -it vsb-frontend bun install
-  ```
+# Build for production
+docker exec -it vsb-frontend bun build
+```
 
-- Run the development server:
-  ```bash
-  docker exec -it vsb-frontend bun dev
-  ```
+## 🔄 Reverse Proxy Configuration
 
-- Build the production assets:
-  ```bash
-  docker exec -it vsb-frontend bun build
-  ```
+Pre-configured Nginx handles:
+- Frontend routing (`/`)
+- Backend API routing (`/api`)
+- Static assets serving
+- CORS headers management
 
-## License
+## 📜 License
 
-This project is licensed under the MIT License.
+MIT License - See [LICENSE](LICENSE) file for details
