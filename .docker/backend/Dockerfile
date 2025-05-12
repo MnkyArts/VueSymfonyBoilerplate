@@ -26,17 +26,16 @@ RUN wget https://getcomposer.org/installer -O composer-setup.php \
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy application code
-COPY . /var/www/html
-
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html
-
-# Check if the vendor directory exists, and if not, run composer install
-RUN if [ ! -d "/var/www/html/vendor" ]; then composer install; fi
 
 # Expose port 8000
 EXPOSE 8000
 
-# Serve the Symfony project on port 8000 and allow all IPs
+# Create an entrypoint script
+COPY .docker/backend/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Use the entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["symfony", "serve", "--no-tls", "--port=8000", "--allow-all-ip"]
